@@ -1,5 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +15,110 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+export const App = () => {
+  const [value, setValue] = useState(goodsFromServer);
+  const [act, actValue] = useState('');
+  const [reve, revValue] = useState(false);
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  function fun(good, setvalue, rev = false) {
+    const val = [...good];
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+    if (setvalue === 'alphabetically') {
+      val.sort((good1, good2) => good1.localeCompare(good2));
+    }
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+    if (setvalue === 'length') {
+      val.sort((good1, good2) => good1.length - good2.length);
+    }
+
+    if (setvalue === 'reverse') {
+      val.reverse();
+    }
+
+    if (rev) {
+      if (setvalue === 'alphabetically') {
+        val.sort((good1, good2) => good2.localeCompare(good1));
+      }
+
+      if (setvalue === 'length') {
+        val.sort((good1, good2) => good2.length - good1.length);
+      }
+    }
+
+    return val;
+  }
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={
+            act === 'alphabetically'
+              ? 'button is-info '
+              : 'button is-info is-light'
+          }
+          onClick={() => {
+            setValue(fun(value, 'alphabetically', reve));
+            actValue('alphabetically');
+          }}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={
+            act === 'lenght'
+              ? 'button is-success'
+              : 'button is-success is-light'
+          }
+          onClick={() => {
+            setValue(fun(value, 'length', reve));
+            actValue('lenght');
+          }}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={
+            reve === true ? 'button is-warning' : 'button is-warning is-light'
+          }
+          onClick={() => {
+            if (!reve) {
+              revValue(true);
+              setValue(fun(value, 'reverse', true));
+            } else {
+              revValue(false);
+              setValue(fun(value, 'reverse', false));
+            }
+          }}
+        >
+          Reverse
+        </button>
+
+        {(act !== '' || reve) && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => {
+              setValue(goodsFromServer);
+              actValue('');
+              revValue(false);
+            }}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <ul>
+        {value.map(e => (
+          <li data-cy="Good">{e}</li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
