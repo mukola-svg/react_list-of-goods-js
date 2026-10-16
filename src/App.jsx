@@ -20,7 +20,7 @@ export const App = () => {
   const [act, actValue] = useState('');
   const [reve, revValue] = useState(false);
 
-  function fun(good, setvalue, rev = false) {
+  function sortGoods(good, setvalue, rev = false) {
     const val = [...good];
 
     if (setvalue === 'alphabetically') {
@@ -59,7 +59,7 @@ export const App = () => {
               : 'button is-info is-light'
           }
           onClick={() => {
-            setValue(fun(value, 'alphabetically', reve));
+            setValue(sortGoods(value, 'alphabetically', reve));
             actValue('alphabetically');
           }}
         >
@@ -69,13 +69,13 @@ export const App = () => {
         <button
           type="button"
           className={
-            act === 'lenght'
+            act === 'length'
               ? 'button is-success'
               : 'button is-success is-light'
           }
           onClick={() => {
-            setValue(fun(value, 'length', reve));
-            actValue('lenght');
+            setValue(sortGoods(value, 'length', reve));
+            actValue('length');
           }}
         >
           Sort by length
@@ -89,10 +89,10 @@ export const App = () => {
           onClick={() => {
             if (!reve) {
               revValue(true);
-              setValue(fun(value, 'reverse', true));
+              setValue(sortGoods(value, 'reverse', true));
             } else {
               revValue(false);
-              setValue(fun(value, 'reverse', false));
+              setValue(sortGoods(value, 'reverse', false));
             }
           }}
         >
@@ -116,7 +116,9 @@ export const App = () => {
 
       <ul>
         {value.map(e => (
-          <li data-cy="Good">{e}</li>
+          <li key={e} data-cy="Good">
+            {e}
+          </li>
         ))}
       </ul>
     </div>
